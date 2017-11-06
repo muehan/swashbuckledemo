@@ -1,5 +1,6 @@
 ﻿namespace swashbuckletest
 {
+    using Infrastructure;
     using Newtonsoft.Json;
     using Swashbuckle.AspNetCore.Swagger;
     using Microsoft.AspNetCore.Builder;
@@ -22,7 +23,7 @@
             services.AddMvc().AddControllersAsServices().AddJsonOptions(options =>
             {
                 options.SerializerSettings.NullValueHandling = NullValueHandling.Include;
-                //options.SerializerSettings.Converters.Add(new CustomIEnumerableConverter(new[] { "X.PagedList" }));
+                options.SerializerSettings.Converters.Add(new CustomIEnumerableConverter(new[] { "X.PagedList" }));
             });
 
             services.AddSwaggerGen(c =>

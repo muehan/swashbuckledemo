@@ -6,39 +6,23 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace swashbuckletest.Controllers
 {
+    using Models;
+    using X.PagedList;
+
     [Route("api/[controller]")]
     public class ValuesController : Controller
     {
         // GET api/values
         [HttpGet]
-        public IEnumerable<string> Get()
+        [ProducesResponseType(typeof(IPagedList<Customer>), 200)]
+        public IActionResult Get()
         {
-            return new string[] { "value1", "value2" };
-        }
+            var customers = new List<Customer>
+            {
+                new Customer {Id = 1, Name = "dummy", Number = 1000}
+            };
 
-        // GET api/values/5
-        [HttpGet("{id}")]
-        public string Get(int id)
-        {
-            return "value";
-        }
-
-        // POST api/values
-        [HttpPost]
-        public void Post([FromBody]string value)
-        {
-        }
-
-        // PUT api/values/5
-        [HttpPut("{id}")]
-        public void Put(int id, [FromBody]string value)
-        {
-        }
-
-        // DELETE api/values/5
-        [HttpDelete("{id}")]
-        public void Delete(int id)
-        {
+            return Ok(customers.ToPagedList());
         }
     }
 }

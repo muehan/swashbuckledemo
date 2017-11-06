@@ -67,11 +67,16 @@
                 {
                     swaggerDoc.Definitions.Add("CustomerPagedList", PagedListSchema);
                 }
+
                 foreach (var path in swaggerDoc.Paths)
                 {
                     if (path.Value.Get != null && path.Value.Get.Responses != null && path.Value.Get.Responses.ContainsKey("200"))
+                    { 
                         if (path.Value.Get.Responses["200"].Schema.Items.Ref == "#/definitions/Customer")
+                        { 
                             path.Value.Get.Responses["200"].Schema.Items.Ref = "#/definitions/CustomerPagedList";
+                        }
+                    }
                 }
             }
 
@@ -79,16 +84,19 @@
             {
                 get
                 {
-                    var data = new Dictionary<string, Schema>();
+                    var properties = new Dictionary<string, Schema>();
                     var pagedCust = typeof(IPagedList);
+
                     foreach (PropertyInfo property in pagedCust.GetTypeInfo().GetProperties())
                     {
-                        var sch = new Schema();
-                        data.Add(property.Name, sch);
+                        var schema = new Schema();
+                        properties.Add(property.Name.FirstCharToLowerCase(), schema);
                     }
-                    var s = new Schema { Type = "array", Items = new Schema { Ref = "#/definitions/Customer" } };
-                    data.Add("items", s);
-                    return new Schema { Properties = data };
+
+                    var customerSchema = new Schema { Type = "array", Items = new Schema { Ref = "#/definitions/Customer" } };
+                    properties.Add("items", customerSchema);
+
+                    return new Schema { Properties = properties };
                 }
             }
         }
